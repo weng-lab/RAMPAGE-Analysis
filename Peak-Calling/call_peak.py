@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
 '''
-Usage: call_peak.py [options] <rampagedir>
+Usage: call_peak.py [options] -o OUT <rampagedir>
 
 Options:
     -h --help                      Show help message.
     -v --version                   Show version.
+    -o OUT                         Peak file.
     -l LENGTH                      Feature length for F-seq. [default: 30]
 '''
 
@@ -37,14 +38,14 @@ def fseq(options):
         total = int(f.read().rstrip())
     # run F-seq
     flist = {'+': 'rampage_plus_5end.bed', '-': 'rampage_minus_5end.bed'}
-    all_peak_f = os.path.join(folder, 'rampage_peaks.txt')
+    all_peak_f = options['-o']
     with open(all_peak_f, 'w') as out:
         for strand in flist:
             peak_f = run_fseq(folder, flist[strand], strand, flength,
                               percent)
             with open(peak_f, 'r') as f:
                 for line in f:
-                    if total:  # calculate RPM
+                    if total:
                         out.write(line.rstrip() + '\t%d\n' % total)
                     else:
                         out.write(line)
