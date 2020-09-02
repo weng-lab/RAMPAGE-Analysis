@@ -67,5 +67,21 @@ awk 'FNR==NR {x[$1];next} !($4 in x)' tmp.match tmp.working2 | \
     awk '{print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $5 "\t" $6 "\t" $7 "\t" $8 "\t" \
     $9 "\t" "Intergenic" "\t" "opposite"}' | sort -u >> tmp.out    
 
+#Calculate enrichment
+echo "Calculating enrichment..."
+echo -e "\n"
+echo -e "Group\tObserved\tExpected\tEnrichment"
+rPeakTotal=$(awk '{sum += $3-$2}END{print sum}' tmp.out)
+regions=("TSS" "Proximal" "Exon" "Intron" "Intergenic")
+for r in ${regions[@]}
+do
+    expected=$(awk '{if ($1 == "'$r'") print $3}' $refDir/Baseline-Genomic-Coverage.txt)
+    awk '{if ($10 == "'$r'") sum += $3-$2}END{print "'$r'" "\t" \
+        sum/'$rPeakTotal' "\t" '$expected' "\t" (sum/'$rPeakTotal')/'$expected'}' \
+        tmp.out
+done
+
+
 mv tmp.out $output
+
 rm tmp.* proximal500.bed
