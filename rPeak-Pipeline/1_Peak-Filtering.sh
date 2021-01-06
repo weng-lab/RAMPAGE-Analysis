@@ -12,7 +12,7 @@ signalDir=/data/projects/encode/data
 dataDir=/data/zusers/zhangx/projects/rampage/0_rampage_peak/
 
 k=$(wc -l $file | awk '{print $1}')
-rm -f tmp
+rm -f tmp.*
 for j in `seq 1 1 $k`;
 do
 
