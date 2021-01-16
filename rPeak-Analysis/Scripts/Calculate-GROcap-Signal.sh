@@ -46,4 +46,8 @@ do
     cat plus.tab minus.tab | awk '{print $1 "\t" $5 "\t" "'$assay'"}' > $biosample-GROcap-$assay.txt
 done
 
+~/bin/bigWigAverageOverBed $bw1 Random-500k.hg19-50bp.bed plus.tab
+~/bin/bigWigAverageOverBed $bw1 Random-500k.hg19-50bp.bed minus.tab
+paste plus.tab minus.tab | awk '{print $1 "\t" $5 "\t" "Random"}' > $biosample-GROcap-Random.txt
+
 rm plus.tab minus.tab plus minus
