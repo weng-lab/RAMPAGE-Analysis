@@ -20,6 +20,8 @@ then
     cutoff=0.08
 fi
 
+accession=$(awk '{if ($2 == "'$biosample'") print $1}' ~/Lab/ENCODE/RAMPAGE/RAMPAGE-List.txt)
+
 mkdir -p ~/Lab/ENCODE/RAMPAGE/$biosample-Comparison/VennPie/
 cd ~/Lab/ENCODE/RAMPAGE/$biosample-Comparison/VennPie/
 
@@ -89,5 +91,18 @@ echo -e "CAGE overlap:" $cageSumm
 echo -e "PacBio overlap:" $pacbioSumm
 echo -e "GROcap overlap:" $grocapSumm
 
+support=(0 1 2 3)
+for group in ${support[@]}
+do
+    awk 'FNR==NR {x[$4];next} ($1 in x)' $group-assay-support.txt \
+        ~/Lab/ENCODE/RAMPAGE/signal-output/$accession.txt \
+        | awk '{print $0 "\t" "'$group'"}' >> tmp.signal
+    awk 'FNR==NR {x[$4];next} ($4 in x)' $group-assay-support.txt \
+        ~/Lab/ENCODE/RAMPAGE/Genomic-Context/Full/All-RAMPAGE.genomic-context \
+        | awk '{print $0 "\t" "'$group'"}' >> tmp.context
+done
+
+mv tmp.signal $biosample-Assay-Support-Signal.txt
+mv tmp.context $biosample-Assay-Support-Genomic-Context.txt
 mv output $biosample-VennPie-Summary.txt
 rm cage nocage nogrocap grocap nopacbio pacbio a x *.bed
