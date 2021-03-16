@@ -7,6 +7,11 @@
 #SBATCH --error=/home/moorej3/Job-Logs/jobid_%A_%a.error
 #SBATCH --partition=4hours
 
+#Jill E Moore
+#Weng Lab
+#UMass Medical School
+#March 2021
+
 scriptDir=~/Projects/RAMPAGE
 j=$SLURM_ARRAY_TASK_ID
 
@@ -96,10 +101,10 @@ $bedtools intersect -wo -s -a bed -b 5reads.bed | awk '{print $1 "\t" $2 "\t" \
     sort -u >> out5
 
 echo "Matching reads..."
-python $scriptDir/match.supporting.reads.py out5 out3 > $exp-raw.txt
+python $scriptDir/match-supporting-reads.py out5 out3 > $exp-raw.txt
 
 echo "Producing summary..."
-python $scriptDir/filter.matched.reads.py $exp-raw.txt > $exp-summary.txt
+python $scriptDir/filter-matched-reads.py $exp-raw.txt > $exp-summary.txt
 
 echo "Compressing raw results..."
 gzip $exp-raw.txt
