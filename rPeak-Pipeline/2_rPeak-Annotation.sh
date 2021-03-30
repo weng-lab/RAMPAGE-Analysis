@@ -59,6 +59,7 @@ awk '{print $1 "\t" $2 "\t" $3 "\t" $NF "\t" $5 "\t" $6 "\t" $7 "\t" $8 "\t" $9}
     rPeaks-filtered-Summary.txt > hg38-rPeaks.bed
 
 ~/bin/bedToBigBed -type=bed9 hg38-rPeaks.bed ~/Lab/Reference/Human/hg38/chromInfo.txt hg38-rPeaks.bigBed
+mv tmp.all All-Peaks.bed
 
 rm tmp*
 
