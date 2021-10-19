@@ -3,21 +3,21 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#March 2021
+#October 2021
 
 mode=$1
-remainder=$2
-ccres=$3
-workingDir=$4
-bigWig=$5
-scriptDir=~/Projects/RAMPAGE
+ccres=$2
+workingDir=$3
+bigWigP=$4
+bigWigN=$5
+scriptDir=~/GitHub/RAMPAGE-Analysis/rPeak-Analysis/Scripts
 
 mkdir -p /tmp/moorej3/$SLURM_JOBID"-"$SLURM_ARRAY_TASK_ID
 cd /tmp/moorej3/$SLURM_JOBID"-"$SLURM_ARRAY_TASK_ID
 
-tail -n $remainder $ccres > mini
+N=$(awk 'BEGIN {print '$SLURM_ARRAY_TASK_ID'*100}')
 
-
+head -n $N $ccres | tail -n 100 > mini
 awk '{if ($6 == "+") print $0}' mini > miniP
 awk '{if ($6 == "-") print $0}' mini > miniN
 
@@ -31,7 +31,6 @@ done
 
 f=miniP
 i=$(wc -l miniP | awk '{print $1}')
-echo $i
 for j in `seq 1 1 $i`
 do
     echo $j
@@ -39,7 +38,7 @@ do
     start=$(awk '{if (NR == '$j') print $2}' $f)
     stop=$(awk '{if (NR == '$j') print $3}' $f)
     python $scriptDir/per-bp.py $chrom $start $stop > mini.bed
-    ~/bin/bigWigAverageOverBed $bigWig mini.bed out1.tab
+    ~/bin/bigWigAverageOverBed $bigWigP mini.bed out1.tab
     sort -k1,1g out1.tab | awk '{print $5}' > col1
     paste header1 col1 | awk '{print $1+1 "\t" $2+$3}' > tmp1
     mv tmp1 header1
@@ -47,7 +46,6 @@ done
 
 f=miniN
 i=$(wc -l miniN | awk '{print $1}')
-echo $i
 for j in `seq 1 1 $i`
 do
     echo $j
@@ -55,8 +53,14 @@ do
     start=$(awk '{if (NR == '$j') print $2}' $f)
     stop=$(awk '{if (NR == '$j') print $3}' $f)
     python $scriptDir/per-bp.py $chrom $start $stop > mini.bed
-    ~/bin/bigWigAverageOverBed $bigWig mini.bed out1.tab
-    sort -k1,1g out1.tab | awk '{print $5}' > col1
+    ~/bin/bigWigAverageOverBed $bigWigN mini.bed out1.tab
+    min=$(sort -k5,5g out1.tab | head -n 1 | awk '{print $5}')
+    if [ $min -lt 0 ]
+    then
+        sort -k1,1g out1.tab | awk '{print $5*(-1)}' > col1
+    else
+        sort -k1,1g out1.tab | awk '{print $5}' > col1
+    fi
     paste header2 col1 | awk '{print $1+1 "\t" $2+$3}' > tmp1
     mv tmp1 header2
 done
@@ -67,6 +71,6 @@ paste header1 modHeader | awk '{print $1+$3 "\t" $2+$4}' > output
 outputDir=$workingDir/Output/$mode
 mkdir -p $outputDir
 
-mv output $outputDir/agg-output.$mode.remainder
+mv output $outputDir/agg-output.$mode.$SLURM_ARRAY_TASK_ID
 
 rm -r /tmp/moorej3/$SLURM_JOBID"-"$SLURM_ARRAY_TASK_ID

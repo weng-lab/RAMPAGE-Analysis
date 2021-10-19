@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#Jill E Moore
+#Weng Lab
+#UMass Medical School
+#March 2021
+
 mode=$1
 ccres=$2
 workingDir=$3

@@ -3,14 +3,15 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#March 2021
+#October 2021
 
 mode=$1
 remainder=$2
 ccres=$3
 workingDir=$4
-bigWig=$5
-scriptDir=~/Projects/RAMPAGE
+bigWigP=$5
+bigWigN=$6
+scriptDir=~/GitHub/RAMPAGE-Analysis/rPeak-Analysis/Scripts
 
 mkdir -p /tmp/moorej3/$SLURM_JOBID"-"$SLURM_ARRAY_TASK_ID
 cd /tmp/moorej3/$SLURM_JOBID"-"$SLURM_ARRAY_TASK_ID
@@ -39,7 +40,7 @@ do
     start=$(awk '{if (NR == '$j') print $2}' $f)
     stop=$(awk '{if (NR == '$j') print $3}' $f)
     python $scriptDir/per-bp.py $chrom $start $stop > mini.bed
-    ~/bin/bigWigAverageOverBed $bigWig mini.bed out1.tab
+    ~/bin/bigWigAverageOverBed $bigWigP mini.bed out1.tab
     sort -k1,1g out1.tab | awk '{print $5}' > col1
     paste header1 col1 | awk '{print $1+1 "\t" $2+$3}' > tmp1
     mv tmp1 header1
@@ -55,7 +56,7 @@ do
     start=$(awk '{if (NR == '$j') print $2}' $f)
     stop=$(awk '{if (NR == '$j') print $3}' $f)
     python $scriptDir/per-bp.py $chrom $start $stop > mini.bed
-    ~/bin/bigWigAverageOverBed $bigWig mini.bed out1.tab
+    ~/bin/bigWigAverageOverBed $bigWigN mini.bed out1.tab
     sort -k1,1g out1.tab | awk '{print $5}' > col1
     paste header2 col1 | awk '{print $1+1 "\t" $2+$3}' > tmp1
     mv tmp1 header2
