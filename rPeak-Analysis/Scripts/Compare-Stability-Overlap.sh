@@ -1,6 +1,16 @@
+#!/bin/bash
+
+#Jill E Moore
+#Weng Lab
+#UMass Medical School
+#October 2021
+
 biosample=$1
 header=$2
 bioLower=$(echo $biosample | awk '{print tolower($0)}')
+dataDir=~/Lab/ENCODE/RAMPAGE/GROcap
+
+cd $dataDir
 
 ~/bin/liftOver ~/Lab/ENCODE/RAMPAGE/$biosample-Comparison/RAMPAGE-$biosample-RPM-2.peaks.bed ~/Lab/Reference/Human/hg38/hg38ToHg19.over.chain  tmp.hg19 tmp.no
 
