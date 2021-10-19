@@ -1,14 +1,16 @@
+#!/bin/bash
+
+#Jill E. Moore
+#Weng Lab
+#UMass Medical School
+#October 2021
 
 bio=$1
 workingDir=~/Lab/ENCODE/RAMPAGE/ORF
 scriptDir=~/GitHub/RAMPAGE-Analysis/rPeak-Analysis/Scripts
 
 annotations=Filtered-All-Summaries.txt
-#group="Verified GENCODE TSS"
-#group="TSS unannotated transcript"
-#group="Verified unannotated TSS"
-#group="Candidate GENCODE TSS"
-#group="Local transcription"
+
 rm -f ORF-Summary.$bio.txt
 
 groups=( "Verified_GENCODE_TSS" "TSS_unannotated_transcript" "Verified_unannotated_TSS" "Candidate_GENCODE_TSS" "Local_transcription") 
