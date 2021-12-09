@@ -1,0 +1,423 @@
+---
+title: "RAMPAGE-rPeak-Figures"
+author: "Jill E Moore"
+date: "12/1/2021"
+output: 
+  html_document:
+    toc: true
+    theme: united
+    toc_depth: 3
+---
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 12px;
+  }
+td {  /* Table  */
+  font-size: 8px;
+}
+h1.title {
+  font-size: 38px;
+  color: DarkRed;
+}
+h1 { /* Header 1 */
+  font-size: 22px;
+  color: Black;
+}
+h2 { /* Header 2 */
+    font-size: 16px;
+  color: Black;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Required packages
+```{r}
+library(ggplot2)
+library(gridExtra)
+library(reshape)
+library(eulerr)
+library(plotrix)
+library(gridExtra)
+```
+
+# Figure 1 - Curating a collection of representative RAMPAGE peaks (rPeaks) across 115 biosamples.
+
+
+## Panel B: Bar plots showing the number of RAMPAGE rPeaks stratified into distinct sets by genome context
+```{r}
+d=read.table("Data/F01-BD.rPeak-Counts-Context.txt")
+d$V10 <- factor(d$V10,levels=c("TSS","Proximal","Exon","Intron", "Intergenic"))
+ggplot(d, aes(x=V10, group=V10, fill=V10))+geom_bar()+
+  scale_fill_manual(values=c("#ff0000","#ffa6a6","#148c2a","#bfeb96","#a3a3a3"))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), legend.position="none")+
+  coord_cartesian(y=c(0,25000))+scale_y_continuous(breaks = c(0, 25000/2, 25000))+
+  xlab("")+ylab("# of rPeaks")
+```
+
+## Panel C: Bar plots showing the enrichment in genomic context
+```{r}
+d=read.table("Data/F01-C.rPeak-Context-Enrichment.txt", header=T)
+d$group <- factor(d$group,levels=c("TSS","Proximal","Exon","Intron", "Intergenic"))
+ggplot(d, aes(fill=group, x=group, y=log(enrichment,2)))+geom_bar(stat="identity")+
+  scale_fill_manual(values=c("#ff0000","#ffa6a6","#148c2a","#bfeb96","#a3a3a3"))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), legend.position="none")+
+  coord_cartesian(y=c(-5,20))+scale_y_continuous(breaks = c(0, 10, 20))+
+  xlab("")+ylab("Log2 fold enrichment")
+```
+
+## Panel D: Bar plots showing strand preference of rPeaks
+```{r}
+d=read.table("Data/F01-BD.rPeak-Counts-Context.txt")
+d$V10 <- factor(d$V10,levels=c("TSS","Proximal","Exon","Intron", "Intergenic"))
+ggplot(d, aes(x=V10, group=V11, fill=V11))+
+  geom_bar(width=0.5,position="fill", color="black")+scale_fill_manual(values=c("white","black"))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), legend.position="none")+
+  scale_y_continuous(breaks = c(0, 0.5, 1))+ xlab("")+ylab("Fraction matching strand")
+```
+
+## Panel E: Box plots displaying boundary variation
+```{r}
+d=read.table("Data/F01-E.Boundary-Variation-Summary.txt")
+d$V8 <- factor(d$V8,levels=c("TSS","Proximal","Exon","Intron", "Intergenic"))
+p1=ggplot(d, aes(x=V8, y=V2, fill=V8))+
+  geom_boxplot(width=0.5, outlier.color = "gray", outlier.size=0.25)+
+  coord_cartesian(y=c(0,100))+
+  scale_fill_manual(values=c("#ff0000","#ffa6a6","#148c2a","#bfeb96","#a3a3a3"))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), legend.position="none",
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+        panel.border=element_rect(colour = "black", fill=NA))+
+  ylab("Boundary variation (bp)")+xlab("")+ggtitle("Summit")
+p2=ggplot(d, aes(x=V8, y=V3, fill=V8))+
+  geom_boxplot(width=0.5, outlier.color = "gray", outlier.size=0.25)+
+  coord_cartesian(y=c(0,100))+
+  scale_fill_manual(values=c("#ff0000","#ffa6a6","#148c2a","#bfeb96","#a3a3a3"))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), legend.position="none",
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+        panel.border=element_rect(colour = "black", fill=NA))+
+  ylab("")+xlab("")+ggtitle("High density")
+p3=ggplot(d, aes(x=V8, y=V4, fill=V8))+
+  geom_boxplot(width=0.5, outlier.color = "gray", outlier.size=0.25)+
+  coord_cartesian(y=c(0,100))+
+  scale_fill_manual(values=c("#ff0000","#ffa6a6","#148c2a","#bfeb96","#a3a3a3"))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), legend.position="none",
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+        panel.border=element_rect(colour = "black", fill=NA))+
+  ylab("")+xlab("")+ggtitle("Full peak")
+
+grid.arrange(p1, p2, p3, nrow = 1)
+
+```
+
+## Panel F: Example TSS-overlapping rPeak ZH38T000123
+
+```{r}
+d=read.table("Data/F01-F.ZH38T0001231-Example.txt")
+full=data.frame(x=(-1)*1:114,d[,1:2])
+e=melt(full, id="x")
+
+high=data.frame(x=(-1)*1:114,d[,3:4])
+f=melt(high, id="x")
+
+ggplot(e, aes(x=x, y=value, group=x))+
+  geom_line(color="#6c80f7", alpha=0.5)+
+  geom_line(data=f, aes(x=x, y=value, group=x), size=1.5, color="#6d80f9")+
+  geom_point(data=d, aes(x=(-1)*1:114, y=V6, group=1:114), color="black")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA))+
+  coord_flip()+xlab("")+ylab("Chr 1")+scale_x_continuous(breaks = c(10))+
+  scale_y_continuous(lim=c(39738800, 39738950),breaks = c(39738800, 39738950))
+
+```
+
+## Panel G: UMAP of tissue samples
+
+```{r}
+d=read.table("Data/F01-G.UMAP-Tissue.txt")
+g=read.table("Data/F01-G.Group-Assignments.txt", sep="\t")
+col=c("adrenal"="#fc9803", "bladder"="#f0e981", "brain"="#18ad40",
+      "breast"="#ffa1c0", "esophagus"="#8f3889", "fat"="#ffd500",
+      "female-repro"="#ff0084", "heart"="#f01f1f", "intestine"="#c360cc",
+      "kidney"="#4dd1b9", "liver"="#ba6600", "lung"="Gray", "male-repro"="Blue",
+      "muscle"="#9c3e3e", "nerve"="#7efca2", "pancreas"="#97ad3d", "skin"="#b59b77",
+      "spleen"="#db441a", "stomach"="#9000ff", "thyroid"="#00b1e2","umbilical cord"="black")
+
+ggplot(d, aes(x=V2,y=V3, shape=g$V2))+geom_point(size=3, color="black")+
+  geom_point(data=d, aes(x=V2,y=V3, shape=g$V2, color=g$V1), size=2)+
+  scale_color_manual(values=col, name="Tissue")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        panel.border=element_rect(colour = "black", fill=NA))+
+  coord_cartesian(x=c(0,10),y=c(0,8))+
+  scale_shape_manual(name="Timepoint", values=c(16,17))+
+  xlab("Dim-1")+ylab("Dim-2")
+```
+
+# Figure 2 - RAMPAGE rPeaks are concordant with other transcriptome annotations
+
+
+## Panel A: Bar graph of overlapping RAMPAGE rPeaks and CAGE peaks
+
+```{r}
+d=read.table("Data/F02-A.CAGE-Overlap.txt", header=T)
+e=melt(d, id="Group")
+e$variable <- factor(e$variable,levels=c("No.Overlap","Overlap"))
+
+ggplot(e, aes(x=Group, y=value, fill=paste0(Group, variable)))+
+  geom_bar(width=0.5,stat="identity", position="fill")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), legend.position="none")+
+  coord_flip()+scale_fill_manual(values=c("white","#6d80f9","white","#ee45ac"))+
+  xlab("")+ylab("Fraction of overlapping peaks")
+```
+
+## Panel B: Bar graph of genomic context for overlapping RAMPAGE/CAGE peaks
+```{r}
+d=read.table("Data/F02-B.Overlap-Genomic-Context.txt", header=T)
+d$group <- factor(d$group,levels=rev(c("TSS","Proximal","Exon", "Intron", "Intergenic")))
+
+ggplot(d, aes(x=group, y=cage.overlap/all*100, fill=group))+
+  geom_bar(width=0.5,stat="identity")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), 
+        legend.position="none")+
+  scale_fill_manual(values=rev(c("#ff0000","#ffa6a6","#148c2a","#a1d870","#a3a3a3")))+
+  coord_flip()+xlab("")+ylab("% overlap with CAGE peaks")+
+  scale_y_continuous(lim=c(0, 100),breaks = c(0, 50, 100))
+```
+
+## Panel C: Venn diagram of CAGE and RAMPAGE gene overlap
+```{r}
+d=c("CAGE"=6932,"RAMPAGE"=1573,"CAGE&RAMPAGE"=19274)
+plot(euler(d), quantities = TRUE, fills = c("#ee45ac","#6d80f9"))
+```
+
+## Panel D: Bar graph of genomic context for overlapping RAMPAGE/CAGE peaks
+```{r}
+d=read.table("Data/F02-D.IGK-Sequence-Similarity.txt")
+ggplot(d, aes(x=V1, color=V2))+geom_density(size=1.5)+
+  scale_color_manual(values=c("#ee45ac","#6d80f9"))+
+  scale_y_continuous(lim=c(0,0.125),breaks = seq(0, 0.12, 0.06))+
+  scale_x_continuous(lim=c(40,100))+xlab("Sequence similarity score")+ylab("Density")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), 
+        legend.position="none")
+```
+
+## Panel E: Venn pie and bargraph for K562 RAMPAGE support
+```{r}
+library('plotrix')
+
+total=12263
+
+gro.pacbio.cage=7974
+gro.pacbio.no_cage=1671
+gro.no_pacbio.cage=611
+gro.no_pacbio.no_cage=648
+
+no_gro.pacbio.cage=260
+no_gro.pacbio.no_cage=759
+no_gro.no_pacbio.cage=39
+no_gro.no_pacbio.no_cage=301
+
+pacbio.cage=gro.pacbio.cage+gro.pacbio.no_cage
+pacbio.no_cage=gro.pacbio.no_cage+no_gro.pacbio.no_cage
+no_pacbio.cage=gro.no_pacbio.cage+no_gro.no_pacbio.cage
+no_pacbio.no_cage=gro.no_pacbio.no_cage+no_gro.no_pacbio.no_cage
+
+cage=pacbio.cage+no_pacbio.cage
+no_cage=pacbio.no_cage+no_pacbio.no_cage
+
+iniR=0.2
+
+pie(1, radius=iniR, init.angle=90, col=c('white'), border = NA, labels='')
+floating.pie(0,0,c(gro.pacbio.no_cage,no_gro.pacbio.no_cage,
+                   no_gro.no_pacbio.no_cage,gro.no_pacbio.no_cage,gro.no_pacbio.cage,
+                   no_gro.no_pacbio.cage,no_gro.pacbio.cage,gro.pacbio.cage),
+             radius=4*iniR, startpos=pi/2, col=c("#f49f2a","white","white","#f49f2a","#f49f2a","white","white","#f49f2a"),border=NA)
+
+floating.pie(0,0,c(pacbio.no_cage,no_pacbio.no_cage,no_pacbio.cage,pacbio.cage),
+             radius=3*iniR, startpos=pi/2, col=c("#2b9a15","white","white","#2b9a15"),
+             border = NA)
+floating.pie(0,0, c(no_cage, cage), radius=2*iniR, startpos=pi/2, 
+             col=c("white","#ef45ac"), border = NA)
+text(x=c(0.75, 0.75, -1.2), y=c(0.75,-0.75,0), 
+     labels=c("CAGE","PacBio","GRO-cap"), col=c("#ef45ac","#2b9a15","#f49f2a"))
+```
+```{r}
+d=read.table('Data/F02-EG.K562-Assay-Support-Genomic-Context.txt')
+d$V12 <- factor(d$V12,levels=rev(c("3","2","1","0")))
+ggplot(d, aes(x=V12, fill=V12))+geom_bar(width=0.5)+coord_flip()+
+  scale_y_continuous(lim=c(0,8000),breaks=seq(0,8000,4000))+
+  xlab("# of supporting assays")+ylab("# of K562 rPeaks")+
+  scale_fill_manual(values=rev(c("#5c6cd2", "#6d80f9","#a0adfb","#e5e9fe")))+
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), 
+        legend.position="none")
+```
+
+## Panel F: Violin-boxplot of K562 RAMPAGE signal by assay support
+```{r}
+d=read.table('Data/F02-F.K562-Assay-Support-Signal.txt')
+d$V6 <- factor(d$V6,levels=c("3","2","1","0"))
+
+ggplot(d, aes(x=V6, y=log10(V5), fill=V6))+geom_violin(color="black")+
+  geom_boxplot(width=0.25, color="black")+
+  xlab("# of supporting assays")+ylab("Log10(K562 RAMPAGE signal)")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), 
+        legend.position="none")+
+  coord_cartesian(ylim=c(0,5))+scale_fill_manual(values=c("#5c6cd2", "#6d80f9","#a0adfb","#e5e9fe"))
+```
+
+## Panel G: Stacked bar graphs showing the percentage of K562 rPeaks belonging to each genomic context
+```{r}
+d=read.table('Data/F02-EG.K562-Assay-Support-Genomic-Context.txt')
+d$V12 <- factor(d$V12,levels=c("3","2","1","0"))
+d$V10 <- factor(d$V10,levels=rev(c("TSS","Proximal","Exon","Intron", "Intergenic")))
+
+ggplot(d, aes(x=V12, fill=V10))+geom_bar(width=0.5, position="fill")+
+  xlab("# of supporting assays")+ylab("Fraction of K562 RAMPAGE rPeaks")+
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA))+
+  scale_fill_manual(name="Genomic context", values=rev(c("#ff0000","#ffa6a6","#148c2a","#a1d870","#a3a3a3")))
+
+```
+
+# Figure 3 - Creating set of verified TSSs
+
+
+## Panel B: Density plot of the distances between the 5' and 3' ends of RAMPAGE read pairs
+
+```{r}
+d=read.table("Data/F03-B.Read-Mate-Widths.txt")
+d$V1 <- factor(d$V1,levels=c("TSS","Proximal","Exon","Intron", "Intergenic"))
+ggplot(d, aes(x=log(V8,10), group=V1, color=V1))+
+  geom_density(adjust=2, size=1.5)+
+  scale_color_manual(name="Genomic context",
+                     values=c("#ff0000","#ffa6a6","#148c2a","#a1d870","#a3a3a3"))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA))+
+  geom_vline(xintercept=3, linetype="dashed")+
+  coord_cartesian(y=c(0,0.8), x=c(1.89,6.25))+
+  xlab("Log10(Distance between 5' and 3' ends of read pairs)")+ylab("Density")
+```
+
+## Panel D: Pie chart displaying the percentage of classified RAMPAGE rPeaks
+```{r}
+d=read.table("Data/F03-D.Linked-Gene-Pie.txt", header=T, sep="\t")
+d$Group <- factor(d$Group,levels=rev(d$Group))
+ggplot(d, aes(x="", y=X, fill=Group))+geom_bar(width = 1, stat = "identity")+
+  coord_polar("y", start=0)+xlab("")+ylab("")+
+  scale_fill_manual(name="Genomic context", 
+                    values=rev(c("#b20000","#ff990a","#eeec01","#1229a3","#bcbcbc")))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA))
+```
+
+## Panel E: Bar graphs showing the number of covered GENCODE annotations
+```{r}
+d=read.table("Data/F03-E.Gene-Coverage-Bars.txt")
+d$V1 = factor(d$V1,levels=c("Candidate","Unannotated","GENCODE","Overlap"))
+e=melt(d[,1:3], id="V1")
+f=melt(d[,c(1,4,5)], id="V1")
+
+p1=ggplot(e, aes(x=variable, y=value, fill=V1))+geom_bar(stat="identity")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), legend.position="none")+
+  scale_fill_manual(values=rev(c("black","#b20000","#ff990a","#eeec01")))+
+  coord_cartesian(y=c(0,24000))+ scale_y_continuous(breaks = seq(0, 24000, by = 12000))+
+  ylab("# GENCODE genes")+xlab("Genes")
+
+
+p2=ggplot(f, aes(x=variable, y=value, fill=V1))+geom_bar(stat="identity")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA))+
+  scale_fill_manual(name="Genomic context",values=rev(c("black","#b20000","#ff990a","#eeec01")))+
+  coord_cartesian(y=c(0,54000))+ scale_y_continuous(breaks = seq(0, 54000, by = 27000))+
+  ylab("# GENCODE transcripts")+xlab("Transcripts")
+
+grid.arrange(p1, p2, nrow=1, widths = c(1,1.6))
+```
+
+## Panel F: Bar chart by Genetic Context
+```{r}
+d=read.table('Data/F03-F.Genetic-Context-Linked.txt', sep="\t")
+
+d$V1 = factor(d$V1,levels=rev(c("TSS ","Proximal ","Exon ","Intron ", "Intergenic ")))
+d$V2 = factor(d$V2,levels=rev(c("Verified GENCODE TSS  ","Verified unannotated TSS  ","Candidate GENCODE TSS  ","TSS unannotated transcript  ", "Local transcription  ","Discarded  ")))
+
+ggplot(d, aes(x=V1, y=V3, fill=V2))+geom_bar(stat="identity", position="fill", width=0.5)+
+  xlab("")+ylab("Fraction of rPeaks")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), legend.position="none")+
+  scale_fill_manual(values=rev(c("#b20000","#ff990a","#eeec01","#1229a3","#bcbcbc","black")))+
+  coord_flip()+ scale_y_continuous(breaks = seq(0, 1, 0.5))
+
+```
+
+# Figure 4 - RAMPAGE verified rPeaks are enriched for regulatory signaturess
+
+
+## Panels A&B: Bar plots of overlap between RAMPAGE verified/GENCODE TSSs and 
+
+
+```{r}
+d=read.table("Data/F04-AB.TSS-Feature-Overlap.txt", header=T)
+percent=d$Overlap/(d$Overlap+d$No.Overlap)*100
+
+d$Group = factor(d$V1,levels=rev(c("TSS ","Proximal ","Exon ","Intron ", "Intergenic ")))
+d$Region <- factor(e$variable,levels=c("ccre","eqtl","Overlap"))
+
+ggplot(d, aes(x=Region, y=percent, fill=Group))+
+  geom_bar(stat="identity", position=position_dodge(0.8), width=0.7)+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(colour = "black", fill=NA), legend.position="none")+
+  scale_fill_manual(values=c("#999999","#6d80f9"))
+
+```
