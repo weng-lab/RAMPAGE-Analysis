@@ -3,9 +3,9 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#January 2021
+#December 2021
 
-geneAssignments=~/Lab/ENCODE/RAMPAGE/hg38-rPeak-Gene-Assignments.txt
+geneAssignments=~/Lab/ENCODE/RAMPAGE/Read-Pair-Distance/RAMPAGE-Batch-Results/Read-Linked-Gene-Assignment.txt
 tss=~/Lab/Reference/Human/hg38/GENCODE31/TSS.Basic.bed
 rpeaks=~/Lab/ENCODE/RAMPAGE/hg38-rPeaks.bed
 rpeak100=~/Lab/ENCODE/RAMPAGE/hg38-rPeaks-100bp.bed

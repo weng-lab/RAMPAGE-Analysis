@@ -3,7 +3,7 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#January 2021
+#December 2021
 
 biosample=$1
 genomeRef=~/Lab/Reference/Human/hg38/chromInfo.txt

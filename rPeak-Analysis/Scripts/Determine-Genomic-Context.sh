@@ -3,15 +3,17 @@
 #Jill E. Moore
 #Weng Lab
 #UMass Medical School
-#2019-2020
+#December 2021
 
 rPeaks=$1
 output=$2
-refDir=~/Lab/Reference/Human/hg38/GENCODE31
+gencode=$3
+mode=$4
+refDir=~/Lab/Reference/Human/hg38/$gencode
 
-tss=$refDir/TSS.Basic.bed
-exon=$refDir/Exon.Basic.bed
-genes=$refDir/Transcripts.Basic.bed
+tss=$refDir/TSS.$mode.bed
+exon=$refDir/Exon-Annotated.$mode.bed
+genes=$refDir/Transcripts.$mode.bed
 
 awk '{print $1 "\t" $2-500 "\t" $2+500 "\t" $4 "\t" $5 "\t" $6 "\t" $7}' $tss \
     > proximal500.bed
@@ -69,17 +71,17 @@ awk 'FNR==NR {x[$1];next} !($4 in x)' tmp.match tmp.working2 | \
 
 #Calculate enrichment
 echo "Calculating enrichment..."
-echo -e "\n"
-echo -e "Group\tObserved\tExpected\tEnrichment"
-rPeakTotal=$(awk '{sum += $3-$2}END{print sum}' tmp.out)
-regions=("TSS" "Proximal" "Exon" "Intron" "Intergenic")
-for r in ${regions[@]}
-do
-    expected=$(awk '{if ($1 == "'$r'") print $3}' $refDir/Baseline-Genomic-Coverage.txt)
-    awk '{if ($10 == "'$r'") sum += $3-$2}END{print "'$r'" "\t" \
-        sum/'$rPeakTotal' "\t" '$expected' "\t" (sum/'$rPeakTotal')/'$expected'}' \
-        tmp.out
-done
+#echo -e "\n"
+#echo -e "Group\tObserved\tExpected\tEnrichment"
+#rPeakTotal=$(awk '{sum += $3-$2}END{print sum}' tmp.out)
+#regions=("TSS" "Proximal" "Exon" "Intron" "Intergenic")
+#for r in ${regions[@]}
+#do
+#    expected=$(awk '{if ($1 == "'$r'") print $3}' $refDir/Baseline-Genomic-Coverage.txt)
+#    awk '{if ($10 == "'$r'") sum += $3-$2}END{print "'$r'" "\t" \
+#        sum/'$rPeakTotal' "\t" '$expected' "\t" (sum/'$rPeakTotal')/'$expected'}' \
+#        tmp.out
+#done
 
 
 mv tmp.out $output
