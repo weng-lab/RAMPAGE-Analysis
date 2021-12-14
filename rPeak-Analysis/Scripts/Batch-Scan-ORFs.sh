@@ -3,7 +3,7 @@
 #Jill E. Moore
 #Weng Lab
 #UMass Medical School
-#October 2021
+#December 2021
 
 
 mkdir -p /tmp/moorej3/$SLURM_JOBID"-"$SLURM_ARRAY_TASK_ID
