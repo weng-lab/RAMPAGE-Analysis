@@ -1,3 +1,8 @@
+#Jill E Moore
+#Weng Lab
+#UMass Medical School
+#December 2021
+
 import sys
 
 def Create_GWAS_Dict(gwas):

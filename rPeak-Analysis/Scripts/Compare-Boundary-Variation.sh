@@ -3,7 +3,7 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#March 2021
+#December 2021
 
 scriptDir=~/GitHub/RAMPAGE-Analysis/rPeak-Analysis/Scripts
 dataDir=~/Lab/ENCODE/RAMPAGE/Peaks

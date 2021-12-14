@@ -3,7 +3,7 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#October 2021
+#December 2021
 
 dataDir=~/Lab/ENCODE/RAMPAGE/NET-CAGE/
 rPeaks=~/Lab/ENCODE/RAMPAGE/hg38-rPeaks.bed
