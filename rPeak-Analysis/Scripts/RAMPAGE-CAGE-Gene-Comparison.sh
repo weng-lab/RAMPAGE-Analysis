@@ -3,7 +3,7 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#January 2021
+#December 2021
 
 dataDir=~/Lab/ENCODE/RAMPAGE
 rampage100=~/Lab/ENCODE/RAMPAGE/hg38-rPeaks-100bp.bed

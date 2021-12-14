@@ -1,7 +1,7 @@
 #Jill E Moore
 #Weng Lab
 #UMass Medical School
-#March 2021
+#December 2021
 
 import sys
 
@@ -62,35 +62,35 @@ for key in fiveDict:
             if read in reads3:
                 #i5=reads5.index(read)
                 i3=reads3.index(read)
-                print fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
+                print(fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
                     str(fiveDict[key][2][i5])+"\t"+ str(fiveDict[key][1][i5])+\
-                    "\t"+"exon-"+str(threeDict[key][3][i3])+"\t"+fiveDict[key][-1][i5]
+                    "\t"+"exon-"+str(threeDict[key][3][i3])+"\t"+fiveDict[key][-1][i5])
             elif read in readDict:
-                print fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
+                print(fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
                     str(fiveDict[key][2][i5])+"\t"+str(fiveDict[key][1][i5])+ \
-                    "\t"+"other-"+",".join(readDict[read])+"\t"+fiveDict[key][-1][i5]
+                    "\t"+"other-"+",".join(readDict[read])+"\t"+fiveDict[key][-1][i5])
             elif fiveDict[key][1][i5] >= 1000:
-                print fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
+                print(fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
                     str(fiveDict[key][2][i5])+"\t"+str(fiveDict[key][1][i5])+ \
-                    "\t"+"novel"+"\t"+fiveDict[key][-1][i5]
+                    "\t"+"novel"+"\t"+fiveDict[key][-1][i5])
             else:
-                print fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
+                print(fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
                     str(fiveDict[key][2][i5])+"\t"+ str(fiveDict[key][1][i5])+ \
-                    "\t"+"small"+"\t"+fiveDict[key][-1][i5]
+                    "\t"+"small"+"\t"+fiveDict[key][-1][i5])
     else:
         reads5=fiveDict[key][0]
         for read in reads5:
              i5=reads5.index(read)
              if read in readDict:
-                print fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
+                print(fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
                     str(fiveDict[key][2][i5])+"\t"+ \
                     str(fiveDict[key][1][i5])+"\t"+"other-"+ \
-                    ",".join(readDict[read])+"\t"+fiveDict[key][-1][i5]
+                    ",".join(readDict[read])+"\t"+fiveDict[key][-1][i5])
              elif fiveDict[key][1][i5] >= 1000:
-                print fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
+                print(fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
                     str(fiveDict[key][2][i5])+"\t"+ str(fiveDict[key][1][i5])+\
-                    "\t"+"novel"+"\t"+fiveDict[key][-1][i5]
+                    "\t"+"novel"+"\t"+fiveDict[key][-1][i5])
              else:
-                print fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
+                print(fiveDict[key][-2][i5]+"\t"+key+"\t"+read+"\t"+ \
                     str(fiveDict[key][2][i5])+"\t"+str(fiveDict[key][1][i5])+ \
-                    "\t"+"small"+"\t"+fiveDict[key][-1][i5]
+                    "\t"+"small"+"\t"+fiveDict[key][-1][i5])

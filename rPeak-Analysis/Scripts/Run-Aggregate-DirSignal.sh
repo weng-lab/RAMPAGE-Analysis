@@ -2,7 +2,7 @@
 #Jill E. Moore
 #Weng Lab
 #UMass Medical School
-#Updated March 2020
+#December 2021
 
 mode=$1
 workingDir=$2
