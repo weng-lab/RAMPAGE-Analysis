@@ -1,12 +1,15 @@
 # rPeak Cell type-specific Quantifications
 
+## Columns
+
+| rPeak ID     | RPKM | # reads in rPeaks | total reads | RPM |
+| ------------ | ---- | ----------------- | ----------- | --- |
+| ZH38T0000001 | 7.04978 | 22 | 32849081 | 0.66973 |
+| ZH38T0000002 | 10.1474 | 17 | 32849081 | 0.517518 |
+| ZH38T0000003 | 0.187337 | 2 | 32849081 | 0.0608845 |
 
 
-
-
-
-
-Biosample look-up table
+## Biosample look-up table
 
 | Experiment Accession | Biosample name |
 | -------------------- | -------------- |
