@@ -56,7 +56,7 @@ python $scriptDir/accession-rPeaks.py rPeaks-Filtered.bed hg38 rPeak \
     | sort -k1,1 -k2,2n | awk '{if ($1 !~ /_/ && $1 != "chrM") print $0}' \
     > rPeaks-Filtered-Summary.txt
 awk '{print $1 "\t" $2 "\t" $3 "\t" $NF "\t" $5 "\t" $6 "\t" $7 "\t" $8 "\t" $9}' \
-    rPeaks-filtered-Summary.txt > hg38-rPeaks.bed
+    rPeaks-Filtered-Summary.txt > hg38-rPeaks.bed
 
 ~/bin/bedToBigBed -type=bed9 hg38-rPeaks.bed ~/Lab/Reference/Human/hg38/chromInfo.txt hg38-rPeaks.bigBed
 mv tmp.all All-Peaks.bed
